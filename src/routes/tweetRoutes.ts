@@ -53,7 +53,7 @@ router.get('/', async (req,res)=>{
 // GET_BY_ID
 router.get('/:id', async (req,res)=>{
     const {id} = req.params;
-    const tweet = await client.tweet.findUnique({where:{id: Number(id)}});
+    const tweet = await client.tweet.findUnique({ where: { id: Number(id) }, include: { user: true } });
     !tweet && res.status(404).json({error:'Tweet Not Found!'});
     res.json(tweet);
 })
