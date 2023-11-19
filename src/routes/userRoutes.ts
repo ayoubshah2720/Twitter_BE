@@ -26,14 +26,17 @@ router.post('/', async (req,res)=>{
 
 // GETALL
 router.get('/',async (req,res)=>{
-    const allUsers = await client.user.findMany();
+    const allUsers = await client.user.findMany({ select: { id: true, username: true, image: true, bio: true } });
     res.json(allUsers)
 })
 
 // GET_BY_ID
 router.get('/:id',async (req,res)=>{
     const {id} = req.params;
-    const singleUser = await client.user.findUnique({where: {id:Number(id)}});
+    const singleUser = await client.user.findUnique({ 
+        where: { id: Number(id) },
+        include: { tweets: true }
+    });
     !singleUser && res.status(404).json({error:'User Not Found!'})
     res.json(singleUser);
 })

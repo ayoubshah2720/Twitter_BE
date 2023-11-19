@@ -20,7 +20,33 @@ router.post('/', async (req,res)=>{
 
 // GETALL
 router.get('/', async (req,res)=>{
-    const allTweets = await client.tweet.findMany()
+    const allTweets = await client.tweet.findMany({
+        include: { 
+            //include used to get main object with all fields
+            user: { select: 
+                // and this selec used to get some specific fields from inner object
+            { 
+                id: true,
+                username: true,
+                image: true,
+                bio: true
+            }
+         } }
+        // select: {
+        //     //this part for the main object if you want to get some specific fields from main object
+        //     id: true,
+        //     content: true,
+        //     user: {
+        //         //this part for the inner object if you want to get some specific fields from inner
+        //         select: {
+        //             id: true,
+        //             username: true,
+        //             image: true,
+        //             bio: true
+        //         }
+        //     }
+        // }
+    })
     res.status(501).json(allTweets)
 })
 
