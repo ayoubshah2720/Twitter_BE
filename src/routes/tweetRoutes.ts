@@ -2,13 +2,13 @@ import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 
 const router = Router();
-const client = new PrismaClient;
+const prisma = new PrismaClient();
 // tweet CRUD
 
 // CREATE
 router.post('/', async (req,res)=>{
     const {content, image, userId} = req.body;
-    const result = await client.tweet.create({
+    const result = await prisma.tweet.create({
         data:{
             content,
             image,
@@ -20,7 +20,7 @@ router.post('/', async (req,res)=>{
 
 // GETALL
 router.get('/', async (req,res)=>{
-    const allTweets = await client.tweet.findMany({
+    const allTweets = await prisma.tweet.findMany({
         include: { 
             //include used to get main object with all fields
             user: { select: 
@@ -53,7 +53,7 @@ router.get('/', async (req,res)=>{
 // GET_BY_ID
 router.get('/:id', async (req,res)=>{
     const {id} = req.params;
-    const tweet = await client.tweet.findUnique({ where: { id: Number(id) }, include: { user: true } });
+    const tweet = await prisma.tweet.findUnique({ where: { id: Number(id) }, include: { user: true } });
     !tweet && res.status(404).json({error:'Tweet Not Found!'});
     res.json(tweet);
 })
@@ -62,7 +62,7 @@ router.get('/:id', async (req,res)=>{
 router.put('/:id', async (req,res)=>{
     const {id} = req.params;
     const {content, image, userId} = req.body;
-    const result = await client.tweet.update({
+    const result = await prisma.tweet.update({
         where:{id: Number(id)},
         data:{content, image, userId}
     })
@@ -72,7 +72,7 @@ router.put('/:id', async (req,res)=>{
 // DELETE
 router.delete('/:id', async (req,res)=>{
     const {id} = req.params;
-    await client.tweet.delete({where:{id: Number(id)}});
+    await prisma.tweet.delete({where:{id: Number(id)}});
     res.sendStatus(200);
 })
 
