@@ -27,12 +27,13 @@ router.post('/', async (req,res)=>{
 // GETALL
 router.get('/',async (req,res)=>{
     const allUsers = await prisma.user.findMany({ 
-        select: { 
-            id: true,
-            username: true,
-            image: true,
-            bio: true,
-        }
+        //If want to get custom/specific fields from the user
+        // select: { 
+        //     id: true,
+        //     username: true,
+        //     image: true,
+        //     bio: true,
+        // }
     });
     res.json(allUsers)
 })
